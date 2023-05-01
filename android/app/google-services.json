@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "579091444417",
+    "project_id": "ganit-7b88a",
+    "storage_bucket": "ganit-7b88a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:579091444417:android:d9688a802aa414b82e9a40",
+        "android_client_info": {
+          "package_name": "com.example.ganit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "579091444417-5bf9d08j4ok1qu2vh2athlhnjtg0aluh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB61n6WdnpN1mql2rM436mrn7OsfP83SRw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "579091444417-5bf9d08j4ok1qu2vh2athlhnjtg0aluh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
