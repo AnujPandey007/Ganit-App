@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 double height(context) {
   var myHeight = MediaQuery.of(context).size.height;
@@ -40,7 +41,7 @@ Widget customButton(String buttonName, Function function, double width){
         color: Colors.blueAccent,
         elevation: 0.0,
         highlightElevation: 0.0,
-        highlightColor: const Color.fromRGBO(143, 148, 251, 1),
+        highlightColor: Colors.blueAccent.shade200,
         height: 50.0,
         minWidth: width,
         shape: RoundedRectangleBorder(
@@ -109,4 +110,77 @@ Future<bool> askDialog(context, String message) async{
         ],
       )
   ))??false;
+}
+
+Widget cameraButton(String title, IconData icon, Function function) {
+  return Container(
+    margin: const EdgeInsets.symmetric(horizontal: 5),
+    decoration: BoxDecoration(
+        border: const Border(),
+        borderRadius: BorderRadius.circular(15.0),
+        color: Colors.white,
+        boxShadow: const [
+          BoxShadow(
+              color: Colors.blueAccent,
+              blurRadius: 1.0,
+              offset: Offset(0, 5)
+          )
+        ]
+    ),
+    child: ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        primary: Colors.white,
+        onPrimary: Colors.grey,
+        shadowColor: Colors.grey[400],
+        elevation: 3,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0)),
+      ),
+      onPressed: () {
+        if(title=="Camera"){
+          function(ImageSource.camera);
+        }else{
+          function(ImageSource.gallery);
+        }
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(
+            vertical: 5, horizontal: 5),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: 30,
+            ),
+            Text(
+              title,
+              style: TextStyle(
+                  fontSize: 13, color: Colors.grey[600]),
+            )
+          ],
+        ),
+      ),
+    )
+  );
+}
+
+Widget imageContainer(BuildContext context, Widget widget) {
+  return Container(
+    width: width(context)*0.7,
+    height: height(context)*0.3,
+    decoration: BoxDecoration(
+        border: const Border(),
+        borderRadius: BorderRadius.circular(15.0),
+        color: Colors.grey[300],
+        boxShadow: const [
+          BoxShadow(
+              color: Colors.blueAccent,
+              blurRadius: 1.0,
+              offset: Offset(0, 5)
+          )
+        ]
+    ),
+    child: Center(child: widget)
+  );
 }

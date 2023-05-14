@@ -1,16 +1,13 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:ganit/pages/solution_page.dart';
+import 'package:ganit/services/mathService.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'dart:io';
-import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:math_expressions/math_expressions.dart';
-
 import '../shared/constants.dart';
 import '../shared/curve.dart';
 import '../shared/customRoute.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -20,10 +17,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool textScanning = false;
   XFile? imageFile;
   final _formKey = GlobalKey<FormState>();
   TextEditingController textEditingController = TextEditingController();
+  double lowerBound = 0;
+  double upperBound = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -35,189 +33,101 @@ class _HomePageState extends State<HomePage> {
           child: Stack(
             children: [
               Align(
-                  alignment: Alignment.topLeft,
-                  child: CustomPaint(
-                      painter: HeaderPainter(),
-                      child: SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          height: height(context)*0.35
-                      )
+                alignment: Alignment.topLeft,
+                child: CustomPaint(
+                  painter: HeaderPainter(),
+                  child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: height(context)*0.35
                   )
+                )
               ),
               Column(
                 // crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: height(context)*0.2,),
-                  if (textScanning) const CircularProgressIndicator(),
-                  if (!textScanning && imageFile == null)
-                    Container(
-                      width: width(context)*0.7,
-                      height: height(context)*0.3,
-                      decoration: BoxDecoration(
-                          border: const Border(),
-                          borderRadius: BorderRadius.circular(15.0),
-                          color: Colors.grey[300],
-                          boxShadow: const [
-                            BoxShadow(
-                                color: Colors.blueAccent,
-                                blurRadius: 1.0,
-                                offset: Offset(0, 5)
-                            )
-                          ]
-                      ),
-                      child: Center(
-                        child: Icon(Icons.image, color: Colors.grey, size: 70,)
-                      ),
-                    ),
-                  if (imageFile != null)
-                    Container(
-                        width: width(context)*0.7,
-                        height: height(context)*0.3,
-                        decoration: BoxDecoration(
-                            border: const Border(),
-                            borderRadius: BorderRadius.circular(15.0),
-                            color: Colors.grey[300],
-                            boxShadow: const [
-                              BoxShadow(
-                                  color: Colors.blueAccent,
-                                  blurRadius: 1.0,
-                                  offset: Offset(0, 5)
-                              )
-                            ]
-                        ),
-                        child: Image.file(File(imageFile!.path))
-                    ),
+                  SizedBox(height: height(context)*0.15,),
+                  if (imageFile == null)...[
+                    imageContainer(context, const Icon(Icons.image, color: Colors.grey, size: 70,))
+                  ]else...[
+                    imageContainer(context, Image.file(File(imageFile!.path)))
+                  ],
                   const SizedBox(
-                    height: 40,
+                    height: 15,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 5),
-                          decoration: BoxDecoration(
-                              border: const Border(),
-                              borderRadius: BorderRadius.circular(15.0),
-                              color: Colors.white,
-                              boxShadow: const [
-                                BoxShadow(
-                                    color: Colors.blueAccent,
-                                    blurRadius: 1.0,
-                                    offset: Offset(0, 5)
-                                )
-                              ]
-                          ),
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              primary: Colors.white,
-                              onPrimary: Colors.grey,
-                              shadowColor: Colors.grey[400],
-                              elevation: 3,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0)),
-                            ),
-                            onPressed: () {
-                              getImage(ImageSource.gallery);
-                            },
-                            child: Container(
-                              margin: const EdgeInsets.symmetric(
-                                  vertical: 5, horizontal: 5),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    Icons.image,
-                                    size: 30,
-                                  ),
-                                  Text(
-                                    "Gallery",
-                                    style: TextStyle(
-                                        fontSize: 13, color: Colors.grey[600]),
-                                  )
-                                ],
-                              ),
-                            ),
-                          )),
-                      Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 5),
-                          decoration: BoxDecoration(
-                              border: const Border(),
-                              borderRadius: BorderRadius.circular(15.0),
-                              color: Colors.white,
-                              boxShadow: const [
-                                BoxShadow(
-                                    color: Colors.blueAccent,
-                                    blurRadius: 1.0,
-                                    offset: Offset(0, 5)
-                                )
-                              ]
-                          ),
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              primary: Colors.white,
-                              onPrimary: Colors.grey,
-                              shadowColor: Colors.grey[400],
-                              elevation: 3,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0)),
-                            ),
-                            onPressed: () {
-                              getImage(ImageSource.camera);
-                            },
-                            child: Container(
-                              margin: const EdgeInsets.symmetric(
-                                  vertical: 5, horizontal: 5),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    Icons.camera_alt,
-                                    size: 30,
-                                  ),
-                                  Text(
-                                    "Camera",
-                                    style: TextStyle(
-                                        fontSize: 13, color: Colors.grey[600]),
-                                  )
-                                ],
-                              ),
-                            ),
-                          )),
+                      cameraButton("Gallery", Icons.image, getImage),
+                      cameraButton("Camera", Icons.camera_alt, getImage)
                     ],
                   ),
                   const SizedBox(
-                    height: 40,
+                    height: 15,
                   ),
+                  writeQuestion(),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          border: const Border(),
-                          borderRadius: BorderRadius.circular(15.0),
-                          color: Colors.white,
-                          boxShadow: const [
-                            BoxShadow(
-                                color: Colors.blueAccent,
-                                blurRadius: 1.0,
-                                offset: Offset(0, 3)
-                            )
-                          ]
-                      ),
-                      child: Container(
-                        padding: const EdgeInsets.all(5.0),
-                        child: TextFormField(
-                          maxLines: 8,
-                          keyboardType: TextInputType.multiline,
-                          decoration: textInputDecoration.copyWith(
-                            hintText: "Ask Here..",
+                    padding: const EdgeInsets.all(8.0),
+                    child: Wrap(
+                      children: [
+                        Center(
+                          child: MaterialButton(
+                            height: height(context)*0.04,
+                              minWidth: 50,
+                              color: Colors.blueAccent,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6)
+                              ),
+                              onPressed: () {
+                                // setState(() {
+                                  textEditingController.text += '∫';
+                                  textEditingController.selection = TextSelection.fromPosition(TextPosition(offset: textEditingController.text.length));
+                                // });
+                              },
+                            child: const Text('∫', style: TextStyle(color: Colors.white),),
                           ),
-                          validator: (val) => (val==null||val.isEmpty) ? 'Please select the image or ask a question' : null,
-                          controller: textEditingController,
                         ),
-                      ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text('Lower Bound:'),
+                                GestureDetector(
+                                    onTap: () => setState(() {
+                                      lowerBound == 0 ? print('counter at 0') : lowerBound--;
+                                    }),
+                                    child: const Icon(Icons.remove)),
+                                Text('$lowerBound'),
+                                GestureDetector(
+                                    onTap: () {setState(() {
+                                      lowerBound++;
+                                    });},
+                                    child: const Icon(Icons.add)),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text('Upper Bound:'),
+                                GestureDetector(
+                                    onTap: () => setState(() {
+                                      upperBound == 0 ? print('counter at 0') : upperBound--;
+                                    }),
+                                    child: const Icon(Icons.remove)),
+                                Text('$upperBound'),
+                                GestureDetector(
+                                    onTap: () {setState(() {
+                                      upperBound++;
+                                    });},
+                                    child: const Icon(Icons.add)),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-
                 ],
               ),
             ],
@@ -229,90 +139,116 @@ class _HomePageState extends State<HomePage> {
 
   void solution() {
     if(_formKey.currentState!.validate()){
-      String equation = "3x^2 + 5x - 2 = 0";
-      double? a, b, c, delta, root1, root2;
-      String result = '';
+      try{
+        // String equation = "∫ x^2";
+        String equation = "2x-2=10";
+        // String equation = "x^2-2x=450";
+        // String equation = textEditingController.text;
 
-      // extract the coefficients using regular expressions
-      RegExp exp = RegExp(r'(-?\d+)x\^2\s*([+\-]\s*\d+)x\s*([+\-]\s*\d+)\s*=\s*0');
-      Match match = exp.firstMatch(equation) as Match;
-      a = double.parse(match.group(1)!);
-      b = double.parse(match.group(2)!.replaceAll(' ', ''));
-      c = double.parse(match.group(3)!.replaceAll(' ', ''));
+        String result = "No Question";
 
-      // display the quadratic equation to the user
-      result += 'Step 1: The quadratic equation is:\n';
-      result += '$a*x^2 + $b*x + $c = 0\n\n';
-
-      // apply the quadratic formula
-      delta = b*b- 4 * a* c;
-
-      // display the discriminant to the user
-      result += 'Step 2: The discriminant of the quadratic equation is:\n';
-      result += 'delta = $b^2 - 4*$a*$c = $delta\n\n';
-
-      if (delta < 0) {
-        // no real roots
-        result += 'Step 3: The equation has no real roots\n';
-      } else if (delta == 0) {
-        // one real root
-        root1 = -b / (2 * a);
-        result += 'Step 3: The equation has one real root:\n';
-        result += 'x = -b / 2a = $root1\n';
-      } else {
-        // two real roots
-        root1 = (-b + sqrt(delta)) / (2 * a);
-        root2 = (-b - sqrt(delta)) / (2 * a);
-        result += 'Step 3: The equation has two real roots:\n';
-        result += 'x1 = (-$b + sqrt($delta)) / ${2*a} = $root1\n';
-        result += 'x2 = (-$b - sqrt($delta)) / ${2*a} = $root2\n';
+        if(equation.contains('∫')){
+          result = MathService.solveIntegration(equation.replaceAll("∫", "").replaceAll("dx", ""), lowerBound, upperBound);
+        }else if(equation.contains('x') && !equation.contains('^')){
+          result = MathService.solveLinear(equation);
+        }else if(equation.contains('x^2')){
+          result = MathService.solveQuadratic(equation);//solve
+        }else{
+          result = "Error";
+        }
+        Navigator.of(context).push(CustomRoute(page: SolutionPage(scannedText: result)));
+      }catch(e){
+        showMessage(context, "Error");
       }
-
-      // display the final result to the user
-      print(result);
-      // Navigator.of(context).push(CustomRoute(page: SolutionPage(scannedText: textEditingController.text)));
-      Navigator.of(context).push(CustomRoute(page: SolutionPage(scannedText: result)));
     }else{
       showMessage(context, "Please select the image or ask question");
     }
   }
 
+  void _cropImage(XFile picked) async {
+    CroppedFile? croppedFile = await ImageCropper().cropImage(
+       uiSettings: [
+         AndroidUiSettings(
+             toolbarTitle: 'Cropper',
+             toolbarColor: Colors.blueAccent,
+             toolbarWidgetColor: Colors.white,
+             initAspectRatio: CropAspectRatioPreset.original,
+             lockAspectRatio: false),
+       ],
+      sourcePath: picked.path,
+      aspectRatioPresets: [
+        CropAspectRatioPreset.original,
+        CropAspectRatioPreset.ratio16x9,
+        CropAspectRatioPreset.ratio4x3,
+      ],
+      maxWidth: 800,
+    );
+    if (croppedFile != null) {
+      setState(() {
+        imageFile = XFile(croppedFile.path);
+      });
+      getRecognisedText(InputImage.fromFilePath(imageFile!.path));
+    }else{
+      setState(() {
+        imageFile = null;
+        textEditingController.text = "Error occurred while scanning";
+      });
+    }
+  }
 
   void getImage(ImageSource source) async {
     try {
       final pickedImage = await ImagePicker().pickImage(source: source);
       if (pickedImage != null) {
-        textScanning = true;
-        imageFile = pickedImage;
-        setState(() {});
-        getRecognisedText(pickedImage);
+        setState(() {
+          imageFile = pickedImage;
+        });
+        _cropImage(XFile(pickedImage.path));
       }
     } catch (e) {
-      textScanning = false;
-      imageFile = null;
-      textEditingController.text = "Error occured while scanning";
-      print(e);
-      setState(() {});
+      setState(() {
+        imageFile = null;
+        textEditingController.text = "Error occurred while scanning";
+      });
     }
   }
 
-  void getRecognisedText(XFile image) async {
-    final inputImage = InputImage.fromFilePath(image.path);
-    final textDetector = GoogleMlKit.vision.textRecognizer();
-    RecognizedText recognisedText = await textDetector.processImage(inputImage);
-    await textDetector.close();
-    textEditingController.text = "";
-    for (TextBlock block in recognisedText.blocks) {
-      for (TextLine line in block.lines) {
-        textEditingController.text = textEditingController.text + line.text + "\n";
-      }
-    }
-    textScanning = false;
-    setState(() {});
+  void getRecognisedText(InputImage image) async {
+    final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
+    final RecognizedText recognizedText = await textRecognizer.processImage(image);
+    textEditingController.text = recognizedText.text;
   }
 
-  @override
-  void initState() {
-    super.initState();
+  Widget writeQuestion() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
+      child: Container(
+        decoration: BoxDecoration(
+            border: const Border(),
+            borderRadius: BorderRadius.circular(15.0),
+            color: Colors.white,
+            boxShadow: const [
+              BoxShadow(
+                  color: Colors.blueAccent,
+                  blurRadius: 1.0,
+                  offset: Offset(0, 3)
+              )
+            ]
+        ),
+        child: Container(
+          padding: const EdgeInsets.all(5.0),
+          child: TextFormField(
+            maxLines: 8,
+            keyboardType: TextInputType.multiline,
+            decoration: textInputDecoration.copyWith(
+              hintText: "Ask Here..",
+            ),
+            validator: (val) => (val==null||val.isEmpty) ? 'Please select the image or ask a question' : null,
+            controller: textEditingController,
+          ),
+        ),
+      ),
+    );
   }
+
 }
