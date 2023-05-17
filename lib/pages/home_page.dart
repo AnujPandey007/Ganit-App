@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:function_tree/function_tree.dart';
 import 'package:ganit/pages/solution_page.dart';
 import 'package:ganit/services/mathService.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -138,9 +139,9 @@ class _HomePageState extends State<HomePage> {
     if(_formKey.currentState!.validate()){
       try{
         // String equation = "∫ x^2";
-        // String equation = "4x-8=32";
-        String equation = "x^2 - 5x + 3 = 0";
-        // String equation = textEditingController.text;
+        // String equation = "4x-8=0";
+        // String equation = "2x^2+5x-20=0";
+        String equation = textEditingController.text;
 
         String result = "No Question";
 
@@ -151,12 +152,11 @@ class _HomePageState extends State<HomePage> {
         }else if(equation.contains('x^2')){
           result = MathService.solveQuadratic(equation);
         }else{
-          result = "Error";
+          result = textEditingController.text.interpret().toString();
         }
         Navigator.of(context).push(CustomRoute(page: SolutionPage(answer: result, question: textEditingController.text)));
       }catch(e){
         showMessage(context, "Error");
-        print(e);
       }
     }else{
       showMessage(context, "Please select the image or ask question");

@@ -41,6 +41,7 @@ dependencies:
   share_plus: ^7.0.0
   equations: ^4.1.0
   google_mlkit_text_recognition: ^0.6.0
+  function_tree: ^0.8.13
 
 
 dev_dependencies:

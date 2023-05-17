@@ -27,39 +27,52 @@ class MathService {
 
 
   static String solveQuadratic(String equation) {
-    double? a, b, c, delta, root1, root2;
-    String result = '';
+    double a, b, c;
+    String steps = '';
 
-    RegExp exp = RegExp(r'(-?\d+)x\^2\s*([+\-]\s*\d+)x\s*([+\-]\s*\d+)\s*=\s*0');
-    print(exp);
-    Match match = exp.firstMatch(equation) as Match;
-    a = double.parse(match.group(1)!);
-    b = double.parse(match.group(2)!.replaceAll(' ', ''));
-    c = double.parse(match.group(3)!.replaceAll(' ', ''));
+    RegExp exp = RegExp(r'(-?\d*)x\^2\s*([+\-]\s*\d*)x\s*([+\-]\s*\d*)\s*=\s*([+-]?\d+)');
+    Match? match = exp.firstMatch(equation);
 
-    result += 'Step 1: The quadratic equation is:\n';
-    result += '$a*x^2 + $b*x + $c = 0\n\n';
+    if (match != null) {
+      String coefficientA = match.group(1) ?? '1';
+      String coefficientB = match.group(2) ?? '0';
+      String coefficientC = match.group(3) ?? '0';
 
-    delta = b*b- 4 * a* c;
+      a = double.tryParse(coefficientA.replaceAll(' ', '')) ?? 1;
+      b = double.tryParse(coefficientB.replaceAll(' ', '')) ?? 0;
+      c = double.tryParse(coefficientC.replaceAll(' ', '')) ?? 0;
 
-    result += 'Step 2: The discriminant of the quadratic equation is:\n';
-    result += 'delta = $b^2 - 4*$a*$c = $delta\n\n';
+      if (a == 0) {
+        return 'The given equation is not quadratic.';
+      }
 
-    if (delta < 0) {
-      result += 'Step 3: The equation has no real roots\n';
-    } else if (delta == 0) {
-      root1 = -b / (2 * a);
-      result += 'Step 3: The equation has one real root:\n';
-      result += 'x = -b / 2a = $root1\n';
+      steps += 'Step 1: The given equation is:\n $equation\n\n';
+      steps += 'Step 2: Move all terms to the left side:\n';
+      steps += '${a}x^2 + ${b}x + ${c} = 0\n\n';
+
+      double discriminant = b * b - 4 * a * c;
+      if (discriminant > 0) {
+        double root1 = (-b + sqrt(discriminant)) / (2 * a);
+        double root2 = (-b - sqrt(discriminant)) / (2 * a);
+        steps += 'Step 3: The quadratic equation has two real roots:\n';
+        steps += 'x1 = ${root1.toString().substring(0,5)}\n';
+        steps += 'x2 = ${root2.toString().substring(0,5)}\n\n';
+      } else if (discriminant == 0) {
+        double root = -b / (2 * a);
+        steps += 'Step 3: The quadratic equation has a repeated real root:\n';
+        steps += 'x = ${root.toString().substring(0,5)}\n\n';
+      } else {
+        double realPart = -b / (2 * a);
+        double imaginaryPart = sqrt(-discriminant) / (2 * a);
+        steps += 'Step 3: The quadratic equation has two complex roots:\n';
+        steps += 'x1 = $realPart + ${imaginaryPart}i\n';
+        steps += 'x2 = $realPart - ${imaginaryPart}i\n\n';
+      }
+
+      return 'The solution to the equation $equation is:\n\n $steps';
     } else {
-      root1 = (-b + sqrt(delta)) / (2 * a);
-      root2 = (-b - sqrt(delta)) / (2 * a);
-      result += 'Step 3: The equation has two real roots:\n';
-      result += 'x1 = (-$b + sqrt($delta)) / ${2*a} = $root1\n';
-      result += 'x2 = (-$b - sqrt($delta)) / ${2*a} = $root2\n';
+      return 'Invalid quadratic equation.';
     }
-
-    return (result);
   }
 
   static String solveIntegration(String function, double x, double y){
