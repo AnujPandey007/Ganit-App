@@ -1,27 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:ganit/shared/curve.dart';
+import 'package:share_plus/share_plus.dart';
 import '../shared/constants.dart';
 
-class SolutionPage extends StatefulWidget {
-  final String scannedText;
-  const SolutionPage({Key? key, required this.scannedText}) : super(key: key);
-
-  @override
-  State<SolutionPage> createState() => _SolutionPageState();
-}
-
-class _SolutionPageState extends State<SolutionPage> {
+class SolutionPage extends StatelessWidget {
+  final String answer;
+  final String question;
+  const SolutionPage({Key? key, required this.answer, required this.question}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade200,
+      backgroundColor: Colors.white,
+      bottomNavigationBar: Container(
+        color: Colors.blueAccent,
+          child: customButton("Share", shareQuestionAndAnswer, width(context)*0.9, Colors.white, Colors.black)
+      ),
       body: Stack(
         children: [
+          Align(
+              alignment: Alignment.topLeft,
+              child: CustomPaint(
+                  painter: HeaderPainter(),
+                  child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: height(context)*0.3
+                  )
+              )
+          ),
           Center(
             child: Container(
-                // padding: const EdgeInsets.only(bottom: 15),
+                height: height(context)*0.37,
+                width: width(context)*0.9,
                 margin: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                     border: const Border(),
@@ -35,10 +45,12 @@ class _SolutionPageState extends State<SolutionPage> {
                       )
                     ]
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SingleChildScrollView(
-                    child: Text(widget.scannedText, textAlign: TextAlign.center, style: const TextStyle(fontSize: 18),),
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SingleChildScrollView(
+                      child: Text(answer, textAlign: TextAlign.center, style: const TextStyle(fontSize: 18),),
+                    ),
                   ),
                 )
             ),
@@ -52,7 +64,7 @@ class _SolutionPageState extends State<SolutionPage> {
                     painter: FooterPainter(),
                     child: SizedBox(
                         width: MediaQuery.of(context).size.width,
-                        height: height(context)*0.35
+                        height: height(context)*0.2
                     )
                 )
             ),
@@ -62,5 +74,7 @@ class _SolutionPageState extends State<SolutionPage> {
     );
   }
 
-
+  void shareQuestionAndAnswer(){
+    Share.share('Question:\n\n$question\n\n\n\nAnswer:\n\n$answer');
+  }
 }

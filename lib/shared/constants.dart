@@ -34,11 +34,11 @@ void showMessage(BuildContext context, String text){
   ));
 }
 
-Widget customButton(String buttonName, Function function, double width){
+Widget customButton(String buttonName, Function function, double width, Color color, Color textColor){
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 25.0,vertical: 2.0),
     child: MaterialButton(
-        color: Colors.blueAccent,
+        color: color,
         elevation: 0.0,
         highlightElevation: 0.0,
         highlightColor: Colors.blueAccent.shade200,
@@ -52,7 +52,7 @@ Widget customButton(String buttonName, Function function, double width){
         },
         child:  Text(
           buttonName,
-          style: const TextStyle(color: Colors.white),
+          style: TextStyle(color: textColor),
         )
     ),
   );

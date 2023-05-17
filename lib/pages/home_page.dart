@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: customButton("Solve", solution, width(context)*0.9),
+      bottomNavigationBar: customButton("Solve", solution, width(context)*0.9, Colors.blueAccent, Colors.white),
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -43,7 +43,6 @@ class _HomePageState extends State<HomePage> {
                 )
               ),
               Column(
-                // crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(height: height(context)*0.15,),
                   if (imageFile == null)...[
@@ -78,10 +77,8 @@ class _HomePageState extends State<HomePage> {
                                 borderRadius: BorderRadius.circular(6)
                               ),
                               onPressed: () {
-                                // setState(() {
                                   textEditingController.text += '∫';
                                   textEditingController.selection = TextSelection.fromPosition(TextPosition(offset: textEditingController.text.length));
-                                // });
                               },
                             child: const Text('∫', style: TextStyle(color: Colors.white),),
                           ),
@@ -141,8 +138,8 @@ class _HomePageState extends State<HomePage> {
     if(_formKey.currentState!.validate()){
       try{
         // String equation = "∫ x^2";
-        String equation = "2x-2=10";
-        // String equation = "x^2-2x=450";
+        // String equation = "4x-8=32";
+        String equation = "x^2 - 5x + 3 = 0";
         // String equation = textEditingController.text;
 
         String result = "No Question";
@@ -152,13 +149,14 @@ class _HomePageState extends State<HomePage> {
         }else if(equation.contains('x') && !equation.contains('^')){
           result = MathService.solveLinear(equation);
         }else if(equation.contains('x^2')){
-          result = MathService.solveQuadratic(equation);//solve
+          result = MathService.solveQuadratic(equation);
         }else{
           result = "Error";
         }
-        Navigator.of(context).push(CustomRoute(page: SolutionPage(scannedText: result)));
+        Navigator.of(context).push(CustomRoute(page: SolutionPage(answer: result, question: textEditingController.text)));
       }catch(e){
         showMessage(context, "Error");
+        print(e);
       }
     }else{
       showMessage(context, "Please select the image or ask question");

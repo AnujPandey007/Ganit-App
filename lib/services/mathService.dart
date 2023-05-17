@@ -14,25 +14,13 @@ class MathService {
     b = double.parse(match.group(2)!.replaceAll(' ', ''));
     result = double.parse(match.group(3)!);
 
-    final solution = Linear(
-      a: Complex.fromReal(a),
-      b: Complex.fromReal(result-b),
-    );
+    steps += 'Step 1: The given equation is:\n $equation\n\n';
 
-    print("$a, $result and $b");
+    steps += 'Step 2: Move the constant term to the right side:\n';
+    steps += '$a*x = ${result - b}\n\n';
 
-    for (final root in solution.solutions()) {
-      steps+=(root).toString();
-    }
-
-
-    // steps += 'Step 1: The given equation is:\n $equation\n\n';
-    //
-    // steps += 'Step 2: Move the constant term to the right side:\n';
-    // steps += '$a*x = ${result - b}\n\n';
-    //
-    // steps += 'Step 3: Divide both sides by the coefficient of x:\n';
-    // steps += 'x = ${(result - b) / a}\n\n';
+    steps += 'Step 3: Divide both sides by the coefficient of x:\n';
+    steps += 'x = ${(result - b) / a}\n\n';
 
     return ('The solution to the equation $equation is:\n\n $steps');
   }
@@ -42,34 +30,28 @@ class MathService {
     double? a, b, c, delta, root1, root2;
     String result = '';
 
-    // extract the coefficients using regular expressions
     RegExp exp = RegExp(r'(-?\d+)x\^2\s*([+\-]\s*\d+)x\s*([+\-]\s*\d+)\s*=\s*0');
+    print(exp);
     Match match = exp.firstMatch(equation) as Match;
     a = double.parse(match.group(1)!);
     b = double.parse(match.group(2)!.replaceAll(' ', ''));
     c = double.parse(match.group(3)!.replaceAll(' ', ''));
 
-    // display the qua equation to the user
     result += 'Step 1: The quadratic equation is:\n';
     result += '$a*x^2 + $b*x + $c = 0\n\n';
 
-    // apply the quadratic formula
     delta = b*b- 4 * a* c;
 
-    // display the discriminant to the user
     result += 'Step 2: The discriminant of the quadratic equation is:\n';
     result += 'delta = $b^2 - 4*$a*$c = $delta\n\n';
 
     if (delta < 0) {
-      // no real roots
       result += 'Step 3: The equation has no real roots\n';
     } else if (delta == 0) {
-      // one real root
       root1 = -b / (2 * a);
       result += 'Step 3: The equation has one real root:\n';
       result += 'x = -b / 2a = $root1\n';
     } else {
-      // two real roots
       root1 = (-b + sqrt(delta)) / (2 * a);
       root2 = (-b - sqrt(delta)) / (2 * a);
       result += 'Step 3: The equation has two real roots:\n';
@@ -77,7 +59,6 @@ class MathService {
       result += 'x2 = (-$b - sqrt($delta)) / ${2*a} = $root2\n';
     }
 
-    // display the final result to the user
     return (result);
   }
 

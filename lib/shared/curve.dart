@@ -36,9 +36,9 @@ class FooterPainter extends CustomPainter {
     paint.color = Colors.blueAccent;
     path = Path();
     path.lineTo(size.width, size.height / 5);
-    path.cubicTo(size.width, size.height / 5, size.width * 0.94, size.height * 0.88,size.width * 0.65, size.height * 0.93);
+    path.cubicTo(size.width, size.height / 3, size.width * 0.94, size.height * 0.88,size.width * 0.1, size.height * 0.3);
     path.cubicTo(size.width * 0.36, size.height * 0.97, size.width / 5, size.height,size.width / 5, size.height);
-    path.cubicTo(size.width / 5, size.height, size.width, size.height,size.width, size.height);
+    path.cubicTo(size.width / 2, size.height, size.width, size.height,size.width, size.height);
     path.cubicTo(size.width, size.height, size.width, size.height / 5,size.width, size.height / 5);
     canvas.drawPath(path, paint);
   }
