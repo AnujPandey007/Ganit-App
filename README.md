@@ -14,8 +14,8 @@ Flutter Framework, Packages such as google mlkit text recognition, image_picker 
 ## Screenshots
 
 <p float="left">
-  <img src="https://raw.githubusercontent.com/AnujPandey007/ganit/master/screenshots/1.png" width="500" />
-  <img src="https://raw.githubusercontent.com/AnujPandey007/ganit/master/screenshots/2.png" width="500" />
+  <img src="https://raw.githubusercontent.com/AnujPandey007/ganit/master/screenshots/1.png" width="300" />
+  <img src="https://raw.githubusercontent.com/AnujPandey007/ganit/master/screenshots/2.png" width="300" />
 </p>
 
 
@@ -27,7 +27,7 @@ The best part of my work is the right kind of technology I chose to make the int
 My application also provides service at offline state so that even without net connectivity it can give the results.
 One strength of my project is the user interface, which is built using Flutter. Flutter is a popular open-source mobile application development framework that enables the creation of high-quality user interfaces in cross platform environment (android and iOS). The user interface is intuitive and easy to use, allowing users to input the mathematical expressions using a camera and gallery or by typing them in. 
 The results will be displayed on the interface, and users will have the option to save or share the results.
-One of the main challenges in my project was the complexity of mathematical expres- sions. Complex expressions may involve a combination of different operations, such as Linear Equations, Quadratic Equations and Definite Integral Equations which may include special symbols and notation. This complexity can make it challenging to accurately recognize and evaluate the expressions.
+One of the main challenges in my project was the complexity of mathematical expressions. Complex expressions may involve a combination of different operations, such as Linear Equations, Quadratic Equations and Definite Integral Equations which may include special symbols and notation. This complexity can make it challenging to accurately recognize and evaluate the expressions.
 
 
 ## Future Directions
