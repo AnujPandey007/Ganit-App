@@ -30,7 +30,7 @@ The results will be displayed on the interface, and users will have the option t
 One of the main challenges in my project was the complexity of mathematical expres- sions. Complex expressions may involve a combination of different operations, such as Linear Equations, Quadratic Equations and Definite Integral Equations which may include special symbols and notation. This complexity can make it challenging to accurately recognize and evaluate the expressions.
 
 
-## Results
+## Future Directions
 
 I can improve my application, by introducing more complex mathematical operations such as differentiation, matrix multiplications etc. Also, instead of giving answers directly or few steps; I can include more descriptive steps for easy understanding of the solution. 
 Apart from mathematical operations, I can focus on text recognition for better recognising complex symbols such as complex number symbol, hand written mathematical symbols etc.
