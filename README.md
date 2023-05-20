@@ -14,8 +14,8 @@ Flutter Framework, Packages such as google mlkit text recognition, image_picker 
 ## Screenshots
 
 <p float="left">
-  <img src="https://raw.githubusercontent.com/AnujPandey007/ganit/master/screenshots/1.jpg" width="100" />
-  <img src="https://raw.githubusercontent.com/AnujPandey007/ganit/master/screenshots/2.jpg" width="100" />
+  <img src="https://raw.githubusercontent.com/AnujPandey007/ganit/master/screenshots/1.png" width="100" />
+  <img src="https://raw.githubusercontent.com/AnujPandey007/ganit/master/screenshots/2.png" width="100" />
 </p>
 
 
