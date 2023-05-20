@@ -69,7 +69,8 @@ class _HomePageState extends State<HomePage> {
                     padding: const EdgeInsets.all(8.0),
                     child: Wrap(
                       children: [
-                        Center(
+                        Align(
+                          alignment: Alignment.topLeft,
                           child: MaterialButton(
                             height: height(context)*0.04,
                               minWidth: 50,
@@ -78,7 +79,7 @@ class _HomePageState extends State<HomePage> {
                                 borderRadius: BorderRadius.circular(6)
                               ),
                               onPressed: () {
-                                  textEditingController.text += '∫';
+                                  textEditingController.text = '∫'+textEditingController.text;
                                   textEditingController.selection = TextSelection.fromPosition(TextPosition(offset: textEditingController.text.length));
                               },
                             child: const Text('∫', style: TextStyle(color: Colors.white),),
@@ -140,7 +141,7 @@ class _HomePageState extends State<HomePage> {
       try{
         // String equation = "∫ x^2";
         // String equation = "4x-8=0";
-        // String equation = "2x^2+5x-20=0";
+        // String equation = "2x^2-5x+35=0";
         String equation = textEditingController.text;
 
         String result = "No Question";
@@ -156,6 +157,7 @@ class _HomePageState extends State<HomePage> {
         }
         Navigator.of(context).push(CustomRoute(page: SolutionPage(answer: result, question: textEditingController.text)));
       }catch(e){
+        print(e);
         showMessage(context, "Error");
       }
     }else{

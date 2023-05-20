@@ -30,17 +30,18 @@ class MathService {
     double a, b, c;
     String steps = '';
 
-    RegExp exp = RegExp(r'(-?\d*)x\^2\s*([+\-]\s*\d*)x\s*([+\-]\s*\d*)\s*=\s*([+-]?\d+)');
+    RegExp exp = RegExp(r'(-?\d*)x\^2\s*([+\-]?\s*\d*)x\s*([+\-]?\s*\d+)?\s*=\s*([+\-]?\s*\d+)');
     Match? match = exp.firstMatch(equation);
 
     if (match != null) {
       String coefficientA = match.group(1) ?? '1';
       String coefficientB = match.group(2) ?? '0';
-      String coefficientC = match.group(3) ?? '0';
+      String coefficientCLeft = match.group(3) ?? '0';
+      String coefficientCRight = match.group(4) ?? '0';
 
       a = double.tryParse(coefficientA.replaceAll(' ', '')) ?? 1;
       b = double.tryParse(coefficientB.replaceAll(' ', '')) ?? 0;
-      c = double.tryParse(coefficientC.replaceAll(' ', '')) ?? 0;
+      c = double.tryParse(coefficientCLeft.replaceAll(' ', '')) ?? double.tryParse(coefficientCRight.replaceAll(' ', '')) ?? 0;
 
       if (a == 0) {
         return 'The given equation is not quadratic.';
@@ -48,7 +49,7 @@ class MathService {
 
       steps += 'Step 1: The given equation is:\n $equation\n\n';
       steps += 'Step 2: Move all terms to the left side:\n';
-      steps += '${a}x^2 + ${b}x + ${c} = 0\n\n';
+      steps += '${a}x^2 + ${b}x + ${-c} = 0\n\n'; // Adjusted to handle negative constant term
 
       double discriminant = b * b - 4 * a * c;
       if (discriminant > 0) {
@@ -65,8 +66,8 @@ class MathService {
         double realPart = -b / (2 * a);
         double imaginaryPart = sqrt(-discriminant) / (2 * a);
         steps += 'Step 3: The quadratic equation has two complex roots:\n';
-        steps += 'x1 = $realPart + ${imaginaryPart}i\n';
-        steps += 'x2 = $realPart - ${imaginaryPart}i\n\n';
+        steps += 'x1 = $realPart + ${imaginaryPart.toString().substring(0,5)}i\n';
+        steps += 'x2 = $realPart - ${imaginaryPart.toString().substring(0,5)}i\n\n';
       }
 
       return 'The solution to the equation $equation is:\n\n $steps';
@@ -82,7 +83,7 @@ class MathService {
       upperBound: y,
     );
 
-    String result = "$function from $x to $y : ${simpson.integrate().result.toStringAsFixed(3).toString()}";
+    String result = "∫ $function dx from $x to $y : ${simpson.integrate().result.toStringAsFixed(3).toString()}";
     return result;
   }
 
